@@ -1,29 +1,32 @@
-from socket import socket
 import socket
 
-
-class StartClient:
-
-    def __init__(self):
-        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.connect(("localhost", 5000))
-
-    def __del__(self):
-        self.client.close()
-
-    def rec(self, param):
-        data = self.client.recv(param)
-        return data
-
-    def sendall(self, param):
-        pass
-
-    def recv(self, param):
-        pass
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(("localhost", 5000))
 
 
 def sendable_data(data):
     return str(data).rjust(1024, " ").encode("utf-8")
+
+
+##########################################
+range1 = input("Input range 1 -> ")
+range2 = input("Input range 2 -> ")
+
+client.sendall(sendable_data(range1))
+client.sendall(sendable_data(range2))
+
+############################################
+
+data = client.recv(1024)
+
+ready_to = data.decode()
+print("ur random numb is", ready_to)
+
+list_random = []
+for i in range(int(range1), int(range2)):
+    f = i + 1
+    list_random.append(f)
+list_random.sort()
 
 
 def binarySearch(data, val):
@@ -44,37 +47,5 @@ def binarySearch(data, val):
     return best_ind
 
 
-def generate_list(range1, range2):
-    list_random = []
-    for i in range(int(range1), int(range2)):
-        f = i + 1
-        list_random.append(f)
-    return list_random.sort()
-
-
-def main():
-    client = StartClient()
-
-    ##########################################
-    lim_one = input("Input range 1 -> ")
-    lim_two = input("Input range 2 -> ")
-
-    client.sendall(sendable_data(lim_one))
-    client.sendall(sendable_data(lim_two))
-
-    ############################################
-
-    data = client.recv(1024)
-
-    ready_to = data.decode()
-    print("ur random numb is", ready_to)
-
-
-    list_random = generate_list(lim_one, lim_two)
-
-    ind = binarySearch(list_random, int(ready_to))
-    print("num is -", ind)
-
-
-if __name__ == "__main__":
-    main()
+ind = binarySearch(list_random, int(ready_to))
+print("num is -", ind + 1)
